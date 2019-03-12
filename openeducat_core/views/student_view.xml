@@ -23,13 +23,7 @@
                                 <div class="oe_kanban_details">
                                     <h4>
                                         <a type="open">
-                                            <field name="name"/>
-                                            <t t-if="record.middle_name.raw_value">
-                                                <field name="middle_name"/>
-                                            </t>
-                                            <t t-if="record.last_name.raw_value">
-                                                <field name="last_name"/>
-                                            </t>
+                                            <field name="display_name"/>
                                         </a>
                                     </h4>
                                     <ul>
@@ -66,9 +60,10 @@
             <field name="arch" type="xml">
                 <tree string="Student">
                     <field name="title"/>
-                    <field name="name"/>
-                    <field name="middle_name"/>
-                    <field name="last_name"/>
+                    <field name="display_name" string="Name"/>
+                    <field name="name" invisible="1"/>
+                    <field name="middle_name" invisible="1"/>
+                    <field name="last_name" invisible="1"/>
                     <field name="blood_group"/>
                     <field name="emergency_contact"/>
                     <field name="nationality"/>
@@ -199,6 +194,7 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Student">
+                    <field name="display_name"/>
                     <field name="name"/>
                     <field name="blood_group"/>
                     <newline/>

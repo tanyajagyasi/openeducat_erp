@@ -49,6 +49,7 @@ class OpStudentCourse(models.Model):
 class OpStudent(models.Model):
     _name = 'op.student'
     _inherits = {'res.partner': 'partner_id'}
+    _rec_name = 'display_name'
 
     middle_name = fields.Char('Middle Name', size=128)
     last_name = fields.Char('Last Name', size=128)
@@ -72,6 +73,8 @@ class OpStudent(models.Model):
     category_id = fields.Many2one('op.category', 'Category')
     course_detail_ids = fields.One2many('op.student.course', 'student_id',
                                         'Course Details')
+    display_name = fields.Char(string="Display Name", store=True,
+                               compute="_compute_display_name")
 
     _sql_constraints = [
         ('unique_gr_no',
@@ -86,3 +89,27 @@ class OpStudent(models.Model):
             if record.birth_date > fields.Date.today():
                 raise ValidationError(_(
                     "Birth Date can't be greater than current date!"))
+
+    @api.multi
+    @api.depends('name', 'middle_name', 'last_name', 'gr_no')
+    def _compute_display_name(self):
+        for res in self:
+            res.display_name = '%s%s%s%s' % (
+                res.gr_no and '%s' % '[%s] - ' % res.gr_no or '',
+                res.name,
+                res.middle_name and ' %s ' % res.middle_name or ' ',
+                res.last_name)
+            if res.partner_id:
+                res.partner_id.display_name = res.display_name
+
+    @api.model
+    def create(self, vals):
+        res = super(OpStudent, self).create(vals)
+        res.partner_id.display_name = res.display_name
+        return res
+
+    @api.multi
+    def write(self, vals):
+        for rec in self:
+            super(OpStudent, rec).write(vals)
+            rec.partner_id.display_name = rec.display_name

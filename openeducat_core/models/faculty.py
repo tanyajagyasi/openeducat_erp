@@ -50,6 +50,8 @@ class OpFaculty(models.Model):
         readonly=1)
     faculty_subject_ids = fields.Many2many('op.subject', string='Subject(s)')
     emp_id = fields.Many2one('hr.employee', 'Employee')
+    display_name = fields.Char(string="Display Name", store=True,
+                               compute="_compute_display_name")
 
     @api.multi
     @api.constrains('birth_date')
@@ -72,3 +74,26 @@ class OpFaculty(models.Model):
             emp_id = self.env['hr.employee'].create(vals)
             record.write({'emp_id': emp_id.id})
             record.partner_id.write({'supplier': True, 'employee': True})
+
+    @api.multi
+    @api.depends('name', 'middle_name', 'last_name', 'gr_no')
+    def _compute_display_name(self):
+        for res in self:
+            res.display_name = '%s%s%s' % (
+                res.name,
+                res.middle_name and ' %s ' % res.middle_name or ' ',
+                res.last_name)
+            if res.partner_id:
+                res.partner_id.display_name = res.display_name
+
+    @api.model
+    def create(self, vals):
+        res = super(OpFaculty, self).create(vals)
+        res.partner_id.display_name = res.display_name
+        return res
+
+    @api.multi
+    def write(self, vals):
+        for rec in self:
+            super(OpFaculty, rec).write(vals)
+            rec.partner_id.display_name = rec.display_name

@@ -90,7 +90,6 @@ class OpStudent(models.Model):
                 raise ValidationError(_(
                     "Birth Date can't be greater than current date!"))
 
-    @api.multi
     @api.depends('name', 'middle_name', 'last_name', 'gr_no')
     def _compute_display_name(self):
         for res in self:

@@ -75,8 +75,7 @@ class OpFaculty(models.Model):
             record.write({'emp_id': emp_id.id})
             record.partner_id.write({'supplier': True, 'employee': True})
 
-    @api.multi
-    @api.depends('name', 'middle_name', 'last_name', 'gr_no')
+    @api.depends('name', 'middle_name', 'last_name')
     def _compute_display_name(self):
         for res in self:
             res.display_name = '%s%s%s' % (

@@ -24,7 +24,7 @@
                                 <t t-foreach="docs" t-as="doc">
                                     <tr>
                                         <td>
-                                            <t t-raw="doc.name" />
+                                            <t t-raw="doc.display_name" />
                                         </td>
                                         <td>
                                             <t t-esc="get_total_amount(doc)" />

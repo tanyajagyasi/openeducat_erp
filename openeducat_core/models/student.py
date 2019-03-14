@@ -73,9 +73,6 @@ class OpStudent(models.Model):
     category_id = fields.Many2one('op.category', 'Category')
     course_detail_ids = fields.One2many('op.student.course', 'student_id',
                                         'Course Details')
-    display_name = fields.Char(string="Display Name", store=True,
-                               compute="_compute_display_name")
-
     _sql_constraints = [
         ('unique_gr_no',
          'unique(gr_no)',
@@ -106,7 +103,7 @@ class OpStudent(models.Model):
                 'last_name': res.last_name or ''
             }
             if res.partner_id:
-                res.partner_id.display_name = res.display_name \
+                res.partner_id.display_name = res.display_name
 
     @api.model
     def create(self, vals):

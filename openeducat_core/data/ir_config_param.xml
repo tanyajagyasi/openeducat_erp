@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="icp_mail_catchall_alias" model="ir.config_parameter">
+        <field name="key">openeducat_core.display_name_format</field>
+        <field name="value">%(name)s %(middle_name)s %(last_name)s</field>
+    </record>
+</odoo>

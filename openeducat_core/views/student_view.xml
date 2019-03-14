@@ -194,9 +194,9 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Student">
-                    <field name="display_name"/>
-                    <field name="name"/>
+                    <field name="display_name" string="Name"/>
                     <field name="blood_group"/>
+                    <field name="emergency_contact"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter name="blood_group" string="Blood Group"
@@ -205,6 +205,8 @@
                                 domain="[]" context="{'group_by':'nationality'}"/>
                         <filter name="language" string="Language"
                                 domain="[]" context="{'group_by':'lang'}"/>
+                        <filter name="emergency_contact" string="Emergency Contact"
+                                domain="[]" context="{'group_by':'emergency_contact'}"/>
                     </group>
                 </search>
             </field>

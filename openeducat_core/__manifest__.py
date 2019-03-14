@@ -31,6 +31,7 @@
     'website': 'http://www.openeducat.org',
     'depends': ['board', 'document', 'hr', 'web', 'website'],
     'data': [
+        'data/ir_config_param.xml',
         'report/report_menu.xml',
         'report/report_student_bonafide.xml',
         'report/report_student_idcard.xml',

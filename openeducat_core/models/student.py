@@ -82,6 +82,9 @@ class OpStudent(models.Model):
          'Gr Number Must be unique!')
     ]
 
+    def _default_format(self):
+        return '[%(gr_no)s]: %(name)s %(middle_name)s %(last_name)s'
+
     @api.multi
     @api.constrains('birth_date')
     def _check_birthdate(self):
@@ -92,14 +95,18 @@ class OpStudent(models.Model):
 
     @api.depends('name', 'middle_name', 'last_name', 'gr_no')
     def _compute_display_name(self):
+        display_name_format = self.env['ir.config_parameter'].search([
+            ('key', '=', 'openeducat_core.display_name_format')
+        ], limit=1).value or self._default_format()
         for res in self:
-            res.display_name = '%s%s%s%s' % (
-                res.gr_no and '%s' % '[%s] - ' % res.gr_no or '',
-                res.name,
-                res.middle_name and ' %s ' % res.middle_name or ' ',
-                res.last_name)
+            res.display_name = display_name_format % {
+                'gr_no': res.gr_no or '',
+                'name': res.name,
+                'middle_name': res.middle_name or '',
+                'last_name': res.last_name or ''
+            }
             if res.partner_id:
-                res.partner_id.display_name = res.display_name
+                res.partner_id.display_name = res.display_name \
 
     @api.model
     def create(self, vals):
